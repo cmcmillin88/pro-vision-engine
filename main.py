@@ -4,13 +4,14 @@ Entry point for the application.
 """
 
 from pathlib import Path
-from src.models.match import Match
+
 from src.importer.text_importer import TextImporter
+from src.models.coupon import Coupon
 
 
 def print_banner() -> None:
     print("=" * 60)
-    print("⚽  Pro Vision Engine")
+    print("⚽ Pro Vision Engine")
     print("Version: 0.1.0-alpha")
     print("=" * 60)
 
@@ -25,15 +26,20 @@ def main() -> None:
     show_project_location()
 
     importer = TextImporter()
+    coupon = Coupon()
 
-    match = importer.parse_line(
+    matches = [
         "Arsenal - Chelsea",
-        1
-    )
+        "Liverpool - Everton",
+        "AIK - Malmö FF",
+        "Djurgården - Hammarby",
+    ]
+
+    for number, line in enumerate(matches, start=1):
+        coupon.add_match(importer.parse_line(line, number))
 
     print()
-    print("Första importerade matchen:")
-    print(match)
+    print(coupon)
 
 
 if __name__ == "__main__":
