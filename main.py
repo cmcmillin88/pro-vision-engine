@@ -5,6 +5,8 @@ Entry point for the application.
 
 from pathlib import Path
 from src.models.match import Match
+from src.importer.text_importer import TextImporter
+
 
 def print_banner() -> None:
     print("=" * 60)
@@ -22,14 +24,15 @@ def main() -> None:
     print_banner()
     show_project_location()
 
-    match = Match(
-        match_number=1,
-        home_team="Arsenal",
-        away_team="Chelsea",
+    importer = TextImporter()
+
+    match = importer.parse_line(
+        "Arsenal - Chelsea",
+        1
     )
 
     print()
-    print("Första matchobjektet:")
+    print("Första importerade matchen:")
     print(match)
 
 
