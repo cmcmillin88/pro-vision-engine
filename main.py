@@ -3,8 +3,9 @@
 from pathlib import Path
 
 from src.importer.text_importer import TextImporter
+from src.models.coupon import Coupon
 from src.models.game_type import GameType
-from src.validators.coupon_validator import CouponValidator
+from src.services.coupon_import_service import CouponImportService
 
 
 VERSION = "0.1.0-alpha"
@@ -26,14 +27,15 @@ def show_project_location() -> None:
     print(f"Project location: {PROJECT_ROOT}")
 
 
-def load_demo_coupon():
-    """Load the Topptipset demonstration coupon."""
+def load_demo_coupon() -> Coupon:
+    """Import and validate the Topptipset demonstration coupon."""
 
     coupon_file = PROJECT_ROOT / "examples" / "kupong.txt"
 
     importer = TextImporter()
+    import_service = CouponImportService(importer)
 
-    return importer.load_coupon(
+    return import_service.import_coupon(
         coupon_file,
         game_type=GameType.TOPPTIPSET,
         coupon_id="DEMO-TT-001",
@@ -48,11 +50,8 @@ def main() -> None:
 
     coupon = load_demo_coupon()
 
-    validator = CouponValidator()
-    validator.validate(coupon)
-
     print()
-    print("Coupon validation: PASSED")
+    print("Coupon import and validation: PASSED")
     print()
     print(coupon)
 

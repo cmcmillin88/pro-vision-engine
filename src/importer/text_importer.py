@@ -37,7 +37,7 @@ class TextImporter:
 
     def load_coupon(
         self,
-        filename: str | Path,
+        source_reference: str | Path,
         *,
         game_type: GameType = GameType.UNKNOWN,
         coupon_id: str | None = None,
@@ -45,7 +45,7 @@ class TextImporter:
     ) -> Coupon:
         """Load all matches from a text file into a Coupon."""
 
-        path = Path(filename)
+        path = Path(source_reference)
 
         coupon = Coupon(
             game_type=game_type,
@@ -62,7 +62,10 @@ class TextImporter:
                     continue
 
                 match_number = len(coupon) + 1
-                match = self.parse_line(cleaned_line, match_number)
+                match = self.parse_line(
+                    cleaned_line,
+                    match_number,
+                )
                 coupon.add_match(match)
 
         return coupon
