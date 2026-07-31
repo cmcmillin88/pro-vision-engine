@@ -1,5 +1,7 @@
 """Tests for common reduction-condition sets."""
 
+from datetime import datetime, timezone
+
 import pytest
 
 from src.models.color_reduction_rule import (
@@ -9,6 +11,10 @@ from src.models.color_reduction_rule import (
 )
 from src.models.color_reduction_rule_set import (
     ColorReductionRuleSet,
+)
+from src.models.odds_reduction_rule import (
+    OddsReductionRule,
+    OddsReductionSnapshot,
 )
 from src.models.one_x_two_reduction_rule import (
     OneXTwoReductionRule,
@@ -24,6 +30,7 @@ from src.models.reduction_condition_set import (
     ReductionConditionType,
 )
 from src.models.reduction_row import ReductionRow
+from src.models.three_way_odds import ThreeWayOdds
 
 
 def create_color_rule_set() -> ColorReductionRuleSet:
@@ -153,8 +160,35 @@ def create_point_rule() -> PointReductionRule:
     )
 
 
+def create_odds_rule() -> OddsReductionRule:
+    """Create one complete eight-match frozen odds rule."""
+
+    return OddsReductionRule(
+        snapshot=OddsReductionSnapshot(
+            captured_at=datetime(
+                2026,
+                7,
+                31,
+                18,
+                0,
+                tzinfo=timezone.utc,
+            ),
+            match_odds=tuple(
+                ThreeWayOdds(
+                    "2",
+                    "3",
+                    "4",
+                )
+                for _ in range(8)
+            ),
+        ),
+        min_total_odds="100",
+        max_total_odds="10000",
+    )
+
+
 def create_condition_set() -> ReductionConditionSet:
-    """Create the standard complete condition set."""
+    """Create the standard complete pre-odds condition set."""
 
     return ReductionConditionSet(
         color_rule_set=create_color_rule_set(),
@@ -168,6 +202,7 @@ def test_condition_type_order_and_names() -> None:
         ReductionConditionType.COLOR,
         ReductionConditionType.ONE_X_TWO,
         ReductionConditionType.POINT,
+        ReductionConditionType.ODDS,
     )
 
     assert tuple(
@@ -178,6 +213,7 @@ def test_condition_type_order_and_names() -> None:
         "Färg",
         "1X2",
         "Poäng",
+        "Odds",
     )
 
 
@@ -256,6 +292,17 @@ def test_set_supports_one_condition_group() -> None:
     assert condition_set.atomic_condition_count == 1
 
 
+def test_set_supports_odds_condition() -> None:
+    condition_set = ReductionConditionSet(
+        odds_rule=create_odds_rule()
+    )
+
+    assert condition_set.condition_types == (
+        ReductionConditionType.ODDS,
+    )
+    assert condition_set.atomic_condition_count == 1
+
+
 def test_set_uses_and_logic() -> None:
     condition_set = create_condition_set()
 
@@ -324,6 +371,10 @@ def test_set_rejects_both_color_forms() -> None:
         (
             "point_rule",
             "PointReductionRule",
+        ),
+        (
+            "odds_rule",
+            "OddsReductionRule",
         ),
     ),
 )

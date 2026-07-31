@@ -9,6 +9,9 @@ from src.models.color_reduction_rule import (
 from src.models.color_reduction_rule_set import (
     ColorReductionRuleSet,
 )
+from src.models.odds_reduction_rule import (
+    OddsReductionRule,
+)
 from src.models.one_x_two_reduction_rule import (
     OneXTwoReductionRule,
 )
@@ -24,6 +27,7 @@ class ReductionConditionType(str, Enum):
     COLOR = "color"
     ONE_X_TWO = "one_x_two"
     POINT = "point"
+    ODDS = "odds"
 
     @classmethod
     def ordered(
@@ -35,6 +39,7 @@ class ReductionConditionType(str, Enum):
             cls.COLOR,
             cls.ONE_X_TWO,
             cls.POINT,
+            cls.ODDS,
         )
 
     @property
@@ -45,6 +50,7 @@ class ReductionConditionType(str, Enum):
             ReductionConditionType.COLOR: "Färg",
             ReductionConditionType.ONE_X_TWO: "1X2",
             ReductionConditionType.POINT: "Poäng",
+            ReductionConditionType.ODDS: "Odds",
         }[self]
 
 
@@ -56,6 +62,7 @@ class ReductionConditionSet:
     color_rule_set: ColorReductionRuleSet | None = None
     one_x_two_rule: OneXTwoReductionRule | None = None
     point_rule: PointReductionRule | None = None
+    odds_rule: OddsReductionRule | None = None
 
     def __post_init__(self) -> None:
         """Validate the complete condition set."""
@@ -107,6 +114,17 @@ class ReductionConditionSet:
             )
 
         if (
+            self.odds_rule is not None
+            and not isinstance(
+                self.odds_rule,
+                OddsReductionRule,
+            )
+        ):
+            raise TypeError(
+                "odds_rule must be an OddsReductionRule."
+            )
+
+        if (
             self.color_rule is not None
             and self.color_rule_set is not None
         ):
@@ -142,6 +160,11 @@ class ReductionConditionSet:
         if self.point_rule is not None:
             active.append(
                 ReductionConditionType.POINT
+            )
+
+        if self.odds_rule is not None:
+            active.append(
+                ReductionConditionType.ODDS
             )
 
         return tuple(
@@ -191,7 +214,7 @@ class ReductionConditionSet:
 
     @property
     def atomic_condition_count(self) -> int:
-        """Return all independently checked MIN/MAX conditions."""
+        """Return all independently checked conditions."""
 
         total = self.color_rule_count
 
@@ -201,6 +224,9 @@ class ReductionConditionSet:
             )
 
         if self.point_rule is not None:
+            total += 1
+
+        if self.odds_rule is not None:
             total += 1
 
         return total
@@ -233,6 +259,11 @@ class ReductionConditionSet:
         if self.point_rule is not None:
             sections.append(
                 f"Poäng {self.point_rule.condition_text}"
+            )
+
+        if self.odds_rule is not None:
+            sections.append(
+                f"Odds {self.odds_rule.condition_text}"
             )
 
         return " | ".join(
@@ -275,6 +306,13 @@ class ReductionConditionSet:
         if self.point_rule is not None:
             approval_states.append(
                 self.point_rule.is_approved(
+                    row
+                )
+            )
+
+        if self.odds_rule is not None:
+            approval_states.append(
+                self.odds_rule.is_approved(
                     row
                 )
             )

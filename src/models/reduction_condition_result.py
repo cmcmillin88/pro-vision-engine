@@ -13,14 +13,62 @@ from src.models.reduction_frame import (
 from src.models.reduction_row import ReductionRow
 
 
+MetricValue = int | Decimal
+
+
+def _validate_metric_value(
+    value: object,
+    *,
+    field_name: str,
+) -> None:
+    """Validate one integer or Decimal metric value."""
+
+    if isinstance(value, bool) or not isinstance(
+        value,
+        (int, Decimal),
+    ):
+        raise TypeError(
+            f"{field_name} must be an integer or Decimal."
+        )
+
+    if isinstance(value, Decimal) and not value.is_finite():
+        raise ValueError(
+            f"{field_name} must be finite."
+        )
+
+    if value < 0:
+        raise ValueError(
+            f"{field_name} must not be negative."
+        )
+
+
+def _format_metric_value(
+    value: MetricValue,
+) -> str:
+    """Format integer metrics and exact Decimal odds."""
+
+    if isinstance(value, int):
+        return str(
+            value
+        )
+
+    return str(
+        value.quantize(
+            Decimal("0.01"),
+            rounding=ROUND_HALF_UP,
+        )
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class ReductionMetricEvaluation:
     """Contains one independently evaluated MIN/MAX metric."""
 
     label: str
-    observed_value: int
-    minimum_value: int
-    maximum_value: int
+    observed_value: MetricValue
+    minimum_value: MetricValue
+    maximum_value: MetricValue
+    maximum_inclusive: bool = True
 
     def __post_init__(self) -> None:
         """Normalize and validate one metric evaluation."""
@@ -51,23 +99,13 @@ class ReductionMetricEvaluation:
             "minimum_value",
             "maximum_value",
         ):
-            value = getattr(
-                self,
-                field_name,
+            _validate_metric_value(
+                getattr(
+                    self,
+                    field_name,
+                ),
+                field_name=field_name,
             )
-
-            if isinstance(value, bool) or not isinstance(
-                value,
-                int,
-            ):
-                raise TypeError(
-                    f"{field_name} must be an integer."
-                )
-
-            if value < 0:
-                raise ValueError(
-                    f"{field_name} must not be negative."
-                )
 
         if self.minimum_value > self.maximum_value:
             raise ValueError(
@@ -75,24 +113,55 @@ class ReductionMetricEvaluation:
                 "maximum_value."
             )
 
+        if not isinstance(
+            self.maximum_inclusive,
+            bool,
+        ):
+            raise TypeError(
+                "maximum_inclusive must be a boolean."
+            )
+
     @property
     def is_approved(self) -> bool:
-        """Return whether the value satisfies MIN/MAX."""
+        """Return whether the value satisfies its interval."""
 
-        return (
+        lower_approved = (
             self.minimum_value
             <= self.observed_value
-            <= self.maximum_value
+        )
+
+        if self.maximum_inclusive:
+            upper_approved = (
+                self.observed_value
+                <= self.maximum_value
+            )
+        else:
+            upper_approved = (
+                self.observed_value
+                < self.maximum_value
+            )
+
+        return (
+            lower_approved
+            and upper_approved
         )
 
     @property
     def summary_text(self) -> str:
         """Return a compact metric description."""
 
+        closing_bracket = (
+            "]"
+            if self.maximum_inclusive
+            else ")"
+        )
+
         return (
-            f"{self.label} {self.observed_value} "
-            f"[{self.minimum_value}/"
-            f"{self.maximum_value}]"
+            f"{self.label} "
+            f"{_format_metric_value(self.observed_value)} "
+            f"[{_format_metric_value(self.minimum_value)}/"
+            f"{_format_metric_value(self.maximum_value)}"
+            f"{closing_bracket}"
         )
 
 

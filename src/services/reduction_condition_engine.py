@@ -99,6 +99,14 @@ class ReductionConditionEngine:
                 )
             )
 
+        if condition_set.odds_rule is not None:
+            evaluations.append(
+                cls._evaluate_odds(
+                    row,
+                    condition_set,
+                )
+            )
+
         return ReductionConditionRowEvaluation(
             row=row,
             condition_evaluations=tuple(
@@ -193,6 +201,37 @@ class ReductionConditionEngine:
             ),
         )
 
+    @staticmethod
+    def _evaluate_odds(
+        row: ReductionRow,
+        condition_set: ReductionConditionSet,
+    ) -> ReductionConditionEvaluation:
+        """Evaluate frozen total odds with an exclusive MAX."""
+
+        rule = condition_set.odds_rule
+
+        if rule is None:
+            raise RuntimeError(
+                "No odds rule is active."
+            )
+
+        metric = ReductionMetricEvaluation(
+            label="Totalodds",
+            observed_value=rule.total_odds(
+                row
+            ),
+            minimum_value=rule.min_total_odds,
+            maximum_value=rule.max_total_odds,
+            maximum_inclusive=False,
+        )
+
+        return ReductionConditionEvaluation(
+            condition_type=ReductionConditionType.ODDS,
+            metrics=(
+                metric,
+            ),
+        )
+
     @classmethod
     def _validate_conditions_against_frame(
         cls,
@@ -260,3 +299,13 @@ class ReductionConditionEngine:
                         "outcome outside the turquoise "
                         "reduction frame."
                     )
+
+        if condition_set.odds_rule is not None:
+            if (
+                condition_set.odds_rule.snapshot.match_count
+                != frame.match_count
+            ):
+                raise ValueError(
+                    "The odds snapshot must contain exactly "
+                    "one complete 1-X-2 market per frame match."
+                )
