@@ -1,0 +1,569 @@
+{
+  "schema_version": "p13-analysis-input-v1",
+  "coupon": {
+    "id": "TT-EXEMPEL-2026-08-01",
+    "game_type": "topptipset"
+  },
+  "matches": [
+    {
+      "number": 1,
+      "reference": "TT-2026-08-01-01",
+      "home_team": "Exempel Hemma 1",
+      "away_team": "Exempel Borta 1",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 1",
+          "played_at": "2026-07-19T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 1",
+          "played_at": "2026-07-18T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 2,
+      "reference": "TT-2026-08-01-02",
+      "home_team": "Exempel Hemma 2",
+      "away_team": "Exempel Borta 2",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 2",
+          "played_at": "2026-07-18T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 2",
+          "played_at": "2026-07-17T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 3,
+      "reference": "TT-2026-08-01-03",
+      "home_team": "Exempel Hemma 3",
+      "away_team": "Exempel Borta 3",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 3",
+          "played_at": "2026-07-17T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 3",
+          "played_at": "2026-07-16T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 4,
+      "reference": "TT-2026-08-01-04",
+      "home_team": "Exempel Hemma 4",
+      "away_team": "Exempel Borta 4",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 4",
+          "played_at": "2026-07-16T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 4",
+          "played_at": "2026-07-15T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 5,
+      "reference": "TT-2026-08-01-05",
+      "home_team": "Exempel Hemma 5",
+      "away_team": "Exempel Borta 5",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 5",
+          "played_at": "2026-07-15T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 5",
+          "played_at": "2026-07-14T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 6,
+      "reference": "TT-2026-08-01-06",
+      "home_team": "Exempel Hemma 6",
+      "away_team": "Exempel Borta 6",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 6",
+          "played_at": "2026-07-14T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 6",
+          "played_at": "2026-07-13T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 7,
+      "reference": "TT-2026-08-01-07",
+      "home_team": "Exempel Hemma 7",
+      "away_team": "Exempel Borta 7",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 7",
+          "played_at": "2026-07-13T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 7",
+          "played_at": "2026-07-12T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    },
+    {
+      "number": 8,
+      "reference": "TT-2026-08-01-08",
+      "home_team": "Exempel Hemma 8",
+      "away_team": "Exempel Borta 8",
+      "home_performances": [
+        {
+          "opponent": "Hemmaprovmotstånd 8",
+          "played_at": "2026-07-12T18:00:00+02:00",
+          "venue": "home",
+          "goals_for": 2,
+          "goals_against": 1,
+          "xg_for": "1.70",
+          "xg_against": "0.90",
+          "shots_for": 13,
+          "shots_against": 8,
+          "shots_on_target_for": 5,
+          "shots_on_target_against": 3,
+          "possession_percentage": "56.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "away_performances": [
+        {
+          "opponent": "Bortaprovmotstånd 8",
+          "played_at": "2026-07-11T18:00:00+02:00",
+          "venue": "away",
+          "goals_for": 1,
+          "goals_against": 1,
+          "xg_for": "1.10",
+          "xg_against": "1.20",
+          "shots_for": 9,
+          "shots_against": 11,
+          "shots_on_target_for": 4,
+          "shots_on_target_against": 4,
+          "possession_percentage": "48.0",
+          "competition": "Exempelligan"
+        }
+      ],
+      "market": {
+        "earlier": {
+          "captured_at": "2026-07-30T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.10",
+            "X": "3.40",
+            "2": "3.50"
+          },
+          "public_percentages": {
+            "1": "48",
+            "X": "27",
+            "2": "25"
+          }
+        },
+        "later": {
+          "captured_at": "2026-07-31T18:00:00+02:00",
+          "source_name": "Exempelmarknad",
+          "odds": {
+            "1": "2.00",
+            "X": "3.50",
+            "2": "3.70"
+          },
+          "public_percentages": {
+            "1": "51",
+            "X": "26",
+            "2": "23"
+          }
+        }
+      }
+    }
+  ]
+}

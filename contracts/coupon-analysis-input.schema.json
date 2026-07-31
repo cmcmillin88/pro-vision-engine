@@ -1,0 +1,349 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://projekt13.local/contracts/coupon-analysis-input.schema.json",
+  "title": "Projekt 13 Coupon Analysis Input",
+  "description": "Versioned input contract for manual or imported Topptipset, Stryktipset and Europatipset analysis.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "coupon",
+    "matches"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "p13-analysis-input-v1"
+    },
+    "coupon": {
+      "$ref": "#/$defs/coupon"
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/match"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "coupon": {
+            "properties": {
+              "game_type": {
+                "const": "topptipset"
+              }
+            },
+            "required": [
+              "game_type"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "matches": {
+            "minItems": 8,
+            "maxItems": 8
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "coupon": {
+            "properties": {
+              "game_type": {
+                "enum": [
+                  "stryktipset",
+                  "europatipset"
+                ]
+              }
+            },
+            "required": [
+              "game_type"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "matches": {
+            "minItems": 13,
+            "maxItems": 13
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "coupon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "game_type"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "game_type": {
+          "enum": [
+            "topptipset",
+            "stryktipset",
+            "europatipset"
+          ]
+        }
+      }
+    },
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "number",
+        "home_team",
+        "away_team",
+        "home_performances",
+        "away_performances",
+        "market"
+      ],
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 13
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "home_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "away_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_performances": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/performance"
+          }
+        },
+        "away_performances": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/performance"
+          }
+        },
+        "market": {
+          "$ref": "#/$defs/market"
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opponent",
+        "played_at",
+        "venue",
+        "goals_for",
+        "goals_against",
+        "xg_for",
+        "xg_against",
+        "shots_for",
+        "shots_against",
+        "shots_on_target_for",
+        "shots_on_target_against"
+      ],
+      "properties": {
+        "opponent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "played_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "venue": {
+          "enum": [
+            "home",
+            "away",
+            "neutral"
+          ]
+        },
+        "goals_for": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goals_against": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "xg_for": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "xg_against": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "shots_for": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shots_against": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shots_on_target_for": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shots_on_target_against": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "possession_percentage": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "competition": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        }
+      }
+    },
+    "market": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "earlier",
+        "later"
+      ],
+      "properties": {
+        "earlier": {
+          "$ref": "#/$defs/market_snapshot"
+        },
+        "later": {
+          "$ref": "#/$defs/market_snapshot"
+        }
+      }
+    },
+    "market_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captured_at",
+        "source_name",
+        "odds",
+        "public_percentages"
+      ],
+      "properties": {
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "odds": {
+          "$ref": "#/$defs/odds"
+        },
+        "public_percentages": {
+          "$ref": "#/$defs/public_percentages"
+        }
+      }
+    },
+    "odds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "1",
+        "X",
+        "2"
+      ],
+      "properties": {
+        "1": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "exclusiveMinimum": 1
+        },
+        "X": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "exclusiveMinimum": 1
+        },
+        "2": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "exclusiveMinimum": 1
+        }
+      }
+    },
+    "public_percentages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "1",
+        "X",
+        "2"
+      ],
+      "properties": {
+        "1": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "X": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "2": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  }
+}
