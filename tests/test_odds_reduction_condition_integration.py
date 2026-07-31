@@ -49,12 +49,13 @@ def create_point_rule() -> PointReductionRule:
     )
 
 
-def test_condition_type_order_includes_odds_last() -> None:
+def test_condition_type_order_keeps_odds_before_payout() -> None:
     assert ReductionConditionType.ordered() == (
         ReductionConditionType.COLOR,
         ReductionConditionType.ONE_X_TWO,
         ReductionConditionType.POINT,
         ReductionConditionType.ODDS,
+        ReductionConditionType.PAYOUT,
     )
 
 

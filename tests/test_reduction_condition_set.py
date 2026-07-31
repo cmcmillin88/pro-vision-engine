@@ -21,6 +21,10 @@ from src.models.one_x_two_reduction_rule import (
     OutcomeCountCondition,
 )
 from src.models.outcome import Outcome
+from src.models.payout_reduction_rule import (
+    PayoutReductionRule,
+    PayoutReductionSnapshot,
+)
 from src.models.point_reduction_rule import (
     PointAssignment,
     PointReductionRule,
@@ -31,6 +35,9 @@ from src.models.reduction_condition_set import (
 )
 from src.models.reduction_row import ReductionRow
 from src.models.three_way_odds import ThreeWayOdds
+from src.models.three_way_percentages import (
+    ThreeWayPercentages,
+)
 
 
 def create_color_rule_set() -> ColorReductionRuleSet:
@@ -187,6 +194,35 @@ def create_odds_rule() -> OddsReductionRule:
     )
 
 
+def create_payout_rule() -> PayoutReductionRule:
+    """Create one complete frozen payout rule."""
+
+    return PayoutReductionRule(
+        snapshot=PayoutReductionSnapshot(
+            captured_at=datetime(
+                2026,
+                7,
+                31,
+                18,
+                0,
+                tzinfo=timezone.utc,
+            ),
+            match_percentages=tuple(
+                ThreeWayPercentages(
+                    "50",
+                    "30",
+                    "20",
+                )
+                for _ in range(8)
+            ),
+            turnover="1000000",
+            top_prize_pool="400000",
+        ),
+        min_estimated_payout="100",
+        max_estimated_payout="100000",
+    )
+
+
 def create_condition_set() -> ReductionConditionSet:
     """Create the standard complete pre-odds condition set."""
 
@@ -203,6 +239,7 @@ def test_condition_type_order_and_names() -> None:
         ReductionConditionType.ONE_X_TWO,
         ReductionConditionType.POINT,
         ReductionConditionType.ODDS,
+        ReductionConditionType.PAYOUT,
     )
 
     assert tuple(
@@ -214,6 +251,7 @@ def test_condition_type_order_and_names() -> None:
         "1X2",
         "Poäng",
         "Odds",
+        "Utdelning",
     )
 
 
@@ -303,6 +341,20 @@ def test_set_supports_odds_condition() -> None:
     assert condition_set.atomic_condition_count == 1
 
 
+def test_set_supports_payout_condition() -> None:
+    condition_set = ReductionConditionSet(
+        payout_rule=create_payout_rule()
+    )
+
+    assert condition_set.condition_types == (
+        ReductionConditionType.PAYOUT,
+    )
+    assert condition_set.atomic_condition_count == 1
+    assert condition_set.condition_pattern == (
+        "Utdelning 100.00 <= utdelning <= 100000.00"
+    )
+
+
 def test_set_uses_and_logic() -> None:
     condition_set = create_condition_set()
 
@@ -375,6 +427,10 @@ def test_set_rejects_both_color_forms() -> None:
         (
             "odds_rule",
             "OddsReductionRule",
+        ),
+        (
+            "payout_rule",
+            "PayoutReductionRule",
         ),
     ),
 )

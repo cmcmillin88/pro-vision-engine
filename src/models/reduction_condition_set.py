@@ -15,6 +15,9 @@ from src.models.odds_reduction_rule import (
 from src.models.one_x_two_reduction_rule import (
     OneXTwoReductionRule,
 )
+from src.models.payout_reduction_rule import (
+    PayoutReductionRule,
+)
 from src.models.point_reduction_rule import (
     PointReductionRule,
 )
@@ -28,6 +31,7 @@ class ReductionConditionType(str, Enum):
     ONE_X_TWO = "one_x_two"
     POINT = "point"
     ODDS = "odds"
+    PAYOUT = "payout"
 
     @classmethod
     def ordered(
@@ -40,6 +44,7 @@ class ReductionConditionType(str, Enum):
             cls.ONE_X_TWO,
             cls.POINT,
             cls.ODDS,
+            cls.PAYOUT,
         )
 
     @property
@@ -51,6 +56,7 @@ class ReductionConditionType(str, Enum):
             ReductionConditionType.ONE_X_TWO: "1X2",
             ReductionConditionType.POINT: "Poäng",
             ReductionConditionType.ODDS: "Odds",
+            ReductionConditionType.PAYOUT: "Utdelning",
         }[self]
 
 
@@ -63,6 +69,7 @@ class ReductionConditionSet:
     one_x_two_rule: OneXTwoReductionRule | None = None
     point_rule: PointReductionRule | None = None
     odds_rule: OddsReductionRule | None = None
+    payout_rule: PayoutReductionRule | None = None
 
     def __post_init__(self) -> None:
         """Validate the complete condition set."""
@@ -125,6 +132,17 @@ class ReductionConditionSet:
             )
 
         if (
+            self.payout_rule is not None
+            and not isinstance(
+                self.payout_rule,
+                PayoutReductionRule,
+            )
+        ):
+            raise TypeError(
+                "payout_rule must be a PayoutReductionRule."
+            )
+
+        if (
             self.color_rule is not None
             and self.color_rule_set is not None
         ):
@@ -165,6 +183,11 @@ class ReductionConditionSet:
         if self.odds_rule is not None:
             active.append(
                 ReductionConditionType.ODDS
+            )
+
+        if self.payout_rule is not None:
+            active.append(
+                ReductionConditionType.PAYOUT
             )
 
         return tuple(
@@ -229,6 +252,9 @@ class ReductionConditionSet:
         if self.odds_rule is not None:
             total += 1
 
+        if self.payout_rule is not None:
+            total += 1
+
         return total
 
     @property
@@ -264,6 +290,12 @@ class ReductionConditionSet:
         if self.odds_rule is not None:
             sections.append(
                 f"Odds {self.odds_rule.condition_text}"
+            )
+
+        if self.payout_rule is not None:
+            sections.append(
+                "Utdelning "
+                f"{self.payout_rule.condition_text}"
             )
 
         return " | ".join(
@@ -313,6 +345,13 @@ class ReductionConditionSet:
         if self.odds_rule is not None:
             approval_states.append(
                 self.odds_rule.is_approved(
+                    row
+                )
+            )
+
+        if self.payout_rule is not None:
+            approval_states.append(
+                self.payout_rule.is_approved(
                     row
                 )
             )

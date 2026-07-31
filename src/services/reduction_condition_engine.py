@@ -107,6 +107,14 @@ class ReductionConditionEngine:
                 )
             )
 
+        if condition_set.payout_rule is not None:
+            evaluations.append(
+                cls._evaluate_payout(
+                    row,
+                    condition_set,
+                )
+            )
+
         return ReductionConditionRowEvaluation(
             row=row,
             condition_evaluations=tuple(
@@ -232,6 +240,36 @@ class ReductionConditionEngine:
             ),
         )
 
+    @staticmethod
+    def _evaluate_payout(
+        row: ReductionRow,
+        condition_set: ReductionConditionSet,
+    ) -> ReductionConditionEvaluation:
+        """Evaluate the frozen transparent payout forecast."""
+
+        rule = condition_set.payout_rule
+
+        if rule is None:
+            raise RuntimeError(
+                "No payout rule is active."
+            )
+
+        metric = ReductionMetricEvaluation(
+            label="Utdelning",
+            observed_value=rule.estimated_payout(
+                row
+            ),
+            minimum_value=rule.min_estimated_payout,
+            maximum_value=rule.max_estimated_payout,
+        )
+
+        return ReductionConditionEvaluation(
+            condition_type=ReductionConditionType.PAYOUT,
+            metrics=(
+                metric,
+            ),
+        )
+
     @classmethod
     def _validate_conditions_against_frame(
         cls,
@@ -308,4 +346,14 @@ class ReductionConditionEngine:
                 raise ValueError(
                     "The odds snapshot must contain exactly "
                     "one complete 1-X-2 market per frame match."
+                )
+        if condition_set.payout_rule is not None:
+            if (
+                condition_set.payout_rule.snapshot.match_count
+                != frame.match_count
+            ):
+                raise ValueError(
+                    "The payout snapshot must contain exactly "
+                    "one complete public distribution per "
+                    "frame match."
                 )
