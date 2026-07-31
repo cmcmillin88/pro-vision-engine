@@ -1,0 +1,20 @@
+[project]
+name = "pro-vision-engine"
+version = "0.1.0"
+description = "Professional football analysis engine for Project 13."
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.139.2,<0.140.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py314"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

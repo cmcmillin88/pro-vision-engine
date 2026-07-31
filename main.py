@@ -6,29 +6,24 @@ from pathlib import Path
 from src.exporters.coupon_json_exporter import (
     CouponJsonExporter,
 )
-from src.importer.svenska_spel_importer import (
-    SvenskaSpelImporter,
-)
 from src.models.coupon import Coupon
-from src.providers.svenska_spel.json_client import (
-    SvenskaSpelJsonClient,
-)
-from src.services.coupon_import_service import (
-    CouponImportService,
+from src.services.demo_coupon_catalog import (
+    DemoCouponCatalog,
 )
 
 
 VERSION = "0.1.0-alpha"
 PROJECT_ROOT = Path(__file__).resolve().parent
+DEMO_COUPON_DIRECTORY = (
+    PROJECT_ROOT
+    / "examples"
+    / "svenska_spel"
+)
 
-DEMO_COUPON_FILES = {
-    "topptipset": "topptipset.json",
-    "stryktipset": "stryktipset.json",
-    "europatipset": "europatipset.json",
-}
 
-
-def create_argument_parser() -> argparse.ArgumentParser:
+def create_argument_parser(
+    available_game_types: tuple[str, ...],
+) -> argparse.ArgumentParser:
     """Create the command-line argument parser."""
 
     parser = argparse.ArgumentParser(
@@ -42,7 +37,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
         "game_type",
         nargs="?",
         default="topptipset",
-        choices=tuple(DEMO_COUPON_FILES),
+        choices=available_game_types,
         help=(
             "Demo coupon to load. "
             "Defaults to topptipset."
@@ -77,29 +72,6 @@ def show_project_location() -> None:
     print(f"Project location: {PROJECT_ROOT}")
 
 
-def load_demo_coupon(
-    game_type_name: str,
-) -> Coupon:
-    """Import and validate the selected Svenska Spel JSON coupon."""
-
-    filename = DEMO_COUPON_FILES[game_type_name]
-
-    coupon_file = (
-        PROJECT_ROOT
-        / "examples"
-        / "svenska_spel"
-        / filename
-    )
-
-    client = SvenskaSpelJsonClient()
-    importer = SvenskaSpelImporter(client)
-    import_service = CouponImportService(importer)
-
-    return import_service.import_coupon(
-        coupon_file
-    )
-
-
 def show_console_output(
     coupon: Coupon,
 ) -> None:
@@ -109,7 +81,10 @@ def show_console_output(
     show_project_location()
 
     print()
-    print(f"Selected demo: {coupon.game_type.display_name}")
+    print(
+        f"Selected demo: "
+        f"{coupon.game_type.display_name}"
+    )
     print(
         "Local Svenska Spel JSON import "
         "and validation: PASSED"
@@ -131,9 +106,15 @@ def show_json_output(
 def main() -> None:
     """Run the Pro Vision Engine demonstration."""
 
-    arguments = create_argument_parser().parse_args()
+    catalog = DemoCouponCatalog(
+        DEMO_COUPON_DIRECTORY
+    )
 
-    coupon = load_demo_coupon(
+    arguments = create_argument_parser(
+        catalog.available_game_types
+    ).parse_args()
+
+    coupon = catalog.load(
         arguments.game_type
     )
 
