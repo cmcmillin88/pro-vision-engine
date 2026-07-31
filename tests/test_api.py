@@ -3,12 +3,17 @@
 from fastapi.testclient import TestClient
 
 from src.api.app import create_app
+from src.api.settings import ApiSettings
 
 
-def create_client() -> TestClient:
+def create_client(
+    settings: ApiSettings | None = None,
+) -> TestClient:
     """Create a test client for the API."""
 
-    application = create_app()
+    application = create_app(
+        settings=settings
+    )
 
     return TestClient(application)
 
@@ -87,4 +92,84 @@ def test_unknown_coupon_returns_not_found() -> None:
 
     assert "Unknown demonstration game type" in (
         payload["detail"]
+    )
+
+
+def test_openapi_documents_coupon_response_schema() -> None:
+    client = create_client()
+
+    response = client.get(
+        "/openapi.json"
+    )
+
+    assert response.status_code == 200
+
+    openapi_document = response.json()
+    schemas = (
+        openapi_document["components"]["schemas"]
+    )
+
+    assert "CouponResponse" in schemas
+    assert "CouponMetadataResponse" in schemas
+    assert "MatchResponse" in schemas
+
+    coupon_operation = openapi_document["paths"][
+        "/api/v1/coupons/{game_type}"
+    ]["get"]
+
+    response_schema = coupon_operation["responses"][
+        "200"
+    ]["content"]["application/json"]["schema"]
+
+    assert response_schema["$ref"] == (
+        "#/components/schemas/CouponResponse"
+    )
+
+
+def test_allowed_origin_receives_cors_header() -> None:
+    allowed_origin = "https://frontend.example"
+
+    settings = ApiSettings(
+        allowed_origins=(
+            allowed_origin,
+        )
+    )
+    client = create_client(
+        settings
+    )
+
+    response = client.get(
+        "/api/v1/health",
+        headers={
+            "Origin": allowed_origin,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers[
+        "access-control-allow-origin"
+    ] == allowed_origin
+
+
+def test_disallowed_origin_receives_no_cors_header() -> None:
+    settings = ApiSettings(
+        allowed_origins=(
+            "https://allowed.example",
+        )
+    )
+    client = create_client(
+        settings
+    )
+
+    response = client.get(
+        "/api/v1/health",
+        headers={
+            "Origin": "https://blocked.example",
+        },
+    )
+
+    assert response.status_code == 200
+    assert (
+        "access-control-allow-origin"
+        not in response.headers
     )

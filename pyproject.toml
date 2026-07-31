@@ -5,6 +5,7 @@ description = "Professional football analysis engine for Project 13."
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]>=0.139.2,<0.140.0",
+    "pydantic>=2.12.2,<3.0.0",
 ]
 
 [tool.black]
