@@ -1,0 +1,38 @@
+{
+  "schema_version": "p13-reduction-input-v1",
+  "target": {
+    "coupon_id": "TT-EXEMPEL-2026-08-01",
+    "game_type": "topptipset",
+    "frame_pattern": null
+  },
+  "row_price": "1.00",
+  "conditions": {
+    "one_x_two": {
+      "1": {
+        "min": 0,
+        "max": 8
+      },
+      "X": {
+        "min": 0,
+        "max": 8
+      },
+      "2": {
+        "min": 0,
+        "max": 8
+      }
+    },
+    "odds": {
+      "market_snapshot": "later",
+      "min": "1.00",
+      "max": "999999999.00"
+    },
+    "payout": {
+      "market_snapshot": "later",
+      "turnover": "1000000.00",
+      "top_prize_pool": "400000.00",
+      "base_unit_stake": "1.00",
+      "min": "0.00",
+      "max": "400000.00"
+    }
+  }
+}
