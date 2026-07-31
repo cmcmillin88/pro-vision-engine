@@ -3,6 +3,9 @@
 import argparse
 from pathlib import Path
 
+from src.exporters.coupon_json_exporter import (
+    CouponJsonExporter,
+)
 from src.importer.svenska_spel_importer import (
     SvenskaSpelImporter,
 )
@@ -43,6 +46,16 @@ def create_argument_parser() -> argparse.ArgumentParser:
         help=(
             "Demo coupon to load. "
             "Defaults to topptipset."
+        ),
+    )
+
+    parser.add_argument(
+        "--output",
+        choices=("console", "json"),
+        default="console",
+        help=(
+            "Select human-readable console output "
+            "or machine-readable JSON."
         ),
     )
 
@@ -87,17 +100,13 @@ def load_demo_coupon(
     )
 
 
-def main() -> None:
-    """Run the Pro Vision Engine demonstration."""
-
-    arguments = create_argument_parser().parse_args()
+def show_console_output(
+    coupon: Coupon,
+) -> None:
+    """Display a coupon in a human-readable format."""
 
     show_banner()
     show_project_location()
-
-    coupon = load_demo_coupon(
-        arguments.game_type
-    )
 
     print()
     print(f"Selected demo: {coupon.game_type.display_name}")
@@ -107,6 +116,32 @@ def main() -> None:
     )
     print()
     print(coupon)
+
+
+def show_json_output(
+    coupon: Coupon,
+) -> None:
+    """Display a coupon as machine-readable JSON."""
+
+    exporter = CouponJsonExporter()
+
+    print(exporter.to_json(coupon))
+
+
+def main() -> None:
+    """Run the Pro Vision Engine demonstration."""
+
+    arguments = create_argument_parser().parse_args()
+
+    coupon = load_demo_coupon(
+        arguments.game_type
+    )
+
+    if arguments.output == "json":
+        show_json_output(coupon)
+        return
+
+    show_console_output(coupon)
 
 
 if __name__ == "__main__":
