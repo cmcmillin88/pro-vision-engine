@@ -6,7 +6,7 @@ Entry point for the application.
 from pathlib import Path
 
 from src.importer.text_importer import TextImporter
-from src.models.coupon import Coupon
+
 
 
 def print_banner() -> None:
@@ -26,17 +26,8 @@ def main() -> None:
     show_project_location()
 
     importer = TextImporter()
-    coupon = Coupon()
 
-    matches = [
-        "Arsenal - Chelsea",
-        "Liverpool - Everton",
-        "AIK - Malmö FF",
-        "Djurgården - Hammarby",
-    ]
-
-    for number, line in enumerate(matches, start=1):
-        coupon.add_match(importer.parse_line(line, number))
+    coupon = importer.load_coupon("examples/kupong.txt")
 
     print()
     print(coupon)
