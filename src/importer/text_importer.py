@@ -1,8 +1,11 @@
 """Text importer for Pro Vision Engine."""
 
+from datetime import datetime
 from pathlib import Path
 
 from src.models.coupon import Coupon
+from src.models.game_type import GameType
+from src.models.import_source import ImportSource
 from src.models.match import Match
 from src.validators.match_validator import MatchValidator
 
@@ -32,11 +35,24 @@ class TextImporter:
             away_team=away_team,
         )
 
-    def load_coupon(self, filename: str | Path) -> Coupon:
+    def load_coupon(
+        self,
+        filename: str | Path,
+        *,
+        game_type: GameType = GameType.UNKNOWN,
+        coupon_id: str | None = None,
+        deadline: datetime | None = None,
+    ) -> Coupon:
         """Load all matches from a text file into a Coupon."""
 
         path = Path(filename)
-        coupon = Coupon()
+
+        coupon = Coupon(
+            game_type=game_type,
+            source=ImportSource.TEXT_FILE,
+            coupon_id=coupon_id,
+            deadline=deadline,
+        )
 
         with path.open(encoding="utf-8") as file:
             for line in file:
