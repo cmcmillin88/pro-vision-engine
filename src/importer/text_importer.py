@@ -4,27 +4,27 @@ from pathlib import Path
 
 from src.models.coupon import Coupon
 from src.models.match import Match
+from src.validators.match_validator import MatchValidator
 
 
 class TextImporter:
     """Converts text into Match and Coupon objects."""
 
+    def __init__(
+        self,
+        validator: MatchValidator | None = None,
+    ) -> None:
+        """Create an importer with a match validator."""
+
+        self.validator = validator or MatchValidator()
+
     def parse_line(self, line: str, match_number: int) -> Match:
-        """Convert one text row into a Match object."""
+        """Convert one validated text row into a Match object."""
 
-        cleaned_line = line.strip()
-        teams = cleaned_line.split(" - ", maxsplit=1)
-
-        if len(teams) != 2:
-            raise ValueError(
-                f"Invalid match format: {line!r}. "
-                "Expected 'Home Team - Away Team'."
-            )
-
-        home_team, away_team = (team.strip() for team in teams)
-
-        if not home_team or not away_team:
-            raise ValueError(f"Home and away teams must not be empty: {line!r}")
+        home_team, away_team = self.validator.validate_and_split(
+            line,
+            match_number,
+        )
 
         return Match(
             match_number=match_number,
