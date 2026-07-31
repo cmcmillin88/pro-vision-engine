@@ -393,8 +393,8 @@ def test_strong_consensus_creates_joint_spike_candidate() -> None:
             opponent_name="Tottenham",
             days_ago=1,
             venue=MatchVenue.HOME,
-            xg_for="2.40",
-            xg_against="0.60",
+            xg_for="2.00",
+            xg_against="0.80",
         ),
     )
     weak_away = (
@@ -403,8 +403,8 @@ def test_strong_consensus_creates_joint_spike_candidate() -> None:
             opponent_name="Liverpool",
             days_ago=1,
             venue=MatchVenue.AWAY,
-            xg_for="0.60",
-            xg_against="2.40",
+            xg_for="0.80",
+            xg_against="2.00",
         ),
     )
     analysis_input = MatchAnalysisInput(
@@ -447,6 +447,10 @@ def test_strong_consensus_creates_joint_spike_candidate() -> None:
     assert report.statistical_favorite is Outcome.HOME
     assert report.market_favorite is Outcome.HOME
     assert report.public_favorite is Outcome.HOME
+    assert (
+        report.conflict_level
+        is ModelMarketConflictLevel.LOW
+    )
     assert report.market_spike_candidate is True
     assert report.is_joint_spike_candidate is True
 
