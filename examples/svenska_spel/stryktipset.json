@@ -1,0 +1,98 @@
+{
+  "game_type": "Stryktipset",
+  "coupon_id": "DEMO-ST-JSON-001",
+  "deadline": "2026-08-08T15:59:00+02:00",
+  "matches": [
+    {
+      "match_number": 1,
+      "home_team": "Manchester United",
+      "away_team": "Newcastle",
+      "competition": "Premier League",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 2,
+      "home_team": "Arsenal",
+      "away_team": "Brighton",
+      "competition": "Premier League",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 3,
+      "home_team": "Liverpool",
+      "away_team": "Aston Villa",
+      "competition": "Premier League",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 4,
+      "home_team": "Chelsea",
+      "away_team": "West Ham",
+      "competition": "Premier League",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 5,
+      "home_team": "Leeds",
+      "away_team": "Norwich",
+      "competition": "Championship",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 6,
+      "home_team": "Middlesbrough",
+      "away_team": "Coventry",
+      "competition": "Championship",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 7,
+      "home_team": "Blackburn",
+      "away_team": "Swansea",
+      "competition": "Championship",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 8,
+      "home_team": "Bristol City",
+      "away_team": "Hull",
+      "competition": "Championship",
+      "kickoff": "2026-08-08T16:00:00+02:00"
+    },
+    {
+      "match_number": 9,
+      "home_team": "AIK",
+      "away_team": "Elfsborg",
+      "competition": "Allsvenskan",
+      "kickoff": "2026-08-08T17:30:00+02:00"
+    },
+    {
+      "match_number": 10,
+      "home_team": "Malmö FF",
+      "away_team": "Häcken",
+      "competition": "Allsvenskan",
+      "kickoff": "2026-08-08T17:30:00+02:00"
+    },
+    {
+      "match_number": 11,
+      "home_team": "Rosenborg",
+      "away_team": "Brann",
+      "competition": "Eliteserien",
+      "kickoff": "2026-08-08T18:00:00+02:00"
+    },
+    {
+      "match_number": 12,
+      "home_team": "Molde",
+      "away_team": "Viking",
+      "competition": "Eliteserien",
+      "kickoff": "2026-08-08T18:00:00+02:00"
+    },
+    {
+      "match_number": 13,
+      "home_team": "Braga",
+      "away_team": "Sporting CP",
+      "competition": "Primeira Liga",
+      "kickoff": "2026-08-08T21:00:00+02:00"
+    }
+  ]
+}

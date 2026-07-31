@@ -1,5 +1,6 @@
 """Command-line entry point for Pro Vision Engine."""
 
+import argparse
 from pathlib import Path
 
 from src.importer.svenska_spel_importer import (
@@ -17,6 +18,36 @@ from src.services.coupon_import_service import (
 VERSION = "0.1.0-alpha"
 PROJECT_ROOT = Path(__file__).resolve().parent
 
+DEMO_COUPON_FILES = {
+    "topptipset": "topptipset.json",
+    "stryktipset": "stryktipset.json",
+    "europatipset": "europatipset.json",
+}
+
+
+def create_argument_parser() -> argparse.ArgumentParser:
+    """Create the command-line argument parser."""
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Import and validate a local Svenska Spel "
+            "demonstration coupon."
+        )
+    )
+
+    parser.add_argument(
+        "game_type",
+        nargs="?",
+        default="topptipset",
+        choices=tuple(DEMO_COUPON_FILES),
+        help=(
+            "Demo coupon to load. "
+            "Defaults to topptipset."
+        ),
+    )
+
+    return parser
+
 
 def show_banner() -> None:
     """Display the Pro Vision Engine banner."""
@@ -33,14 +64,18 @@ def show_project_location() -> None:
     print(f"Project location: {PROJECT_ROOT}")
 
 
-def load_demo_coupon() -> Coupon:
-    """Import and validate the local Svenska Spel JSON coupon."""
+def load_demo_coupon(
+    game_type_name: str,
+) -> Coupon:
+    """Import and validate the selected Svenska Spel JSON coupon."""
+
+    filename = DEMO_COUPON_FILES[game_type_name]
 
     coupon_file = (
         PROJECT_ROOT
         / "examples"
         / "svenska_spel"
-        / "topptipset.json"
+        / filename
     )
 
     client = SvenskaSpelJsonClient()
@@ -55,12 +90,17 @@ def load_demo_coupon() -> Coupon:
 def main() -> None:
     """Run the Pro Vision Engine demonstration."""
 
+    arguments = create_argument_parser().parse_args()
+
     show_banner()
     show_project_location()
 
-    coupon = load_demo_coupon()
+    coupon = load_demo_coupon(
+        arguments.game_type
+    )
 
     print()
+    print(f"Selected demo: {coupon.game_type.display_name}")
     print(
         "Local Svenska Spel JSON import "
         "and validation: PASSED"

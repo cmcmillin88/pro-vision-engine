@@ -1,0 +1,98 @@
+{
+  "game_type": "Europatipset",
+  "coupon_id": "DEMO-ET-JSON-001",
+  "deadline": "2026-08-09T17:59:00+02:00",
+  "matches": [
+    {
+      "match_number": 1,
+      "home_team": "Real Madrid",
+      "away_team": "Sevilla",
+      "competition": "La Liga",
+      "kickoff": "2026-08-09T18:00:00+02:00"
+    },
+    {
+      "match_number": 2,
+      "home_team": "Barcelona",
+      "away_team": "Villarreal",
+      "competition": "La Liga",
+      "kickoff": "2026-08-09T18:00:00+02:00"
+    },
+    {
+      "match_number": 3,
+      "home_team": "Inter",
+      "away_team": "Atalanta",
+      "competition": "Serie A",
+      "kickoff": "2026-08-09T18:30:00+02:00"
+    },
+    {
+      "match_number": 4,
+      "home_team": "Roma",
+      "away_team": "Lazio",
+      "competition": "Serie A",
+      "kickoff": "2026-08-09T18:30:00+02:00"
+    },
+    {
+      "match_number": 5,
+      "home_team": "Bayern München",
+      "away_team": "RB Leipzig",
+      "competition": "Bundesliga",
+      "kickoff": "2026-08-09T19:00:00+02:00"
+    },
+    {
+      "match_number": 6,
+      "home_team": "Borussia Dortmund",
+      "away_team": "Eintracht Frankfurt",
+      "competition": "Bundesliga",
+      "kickoff": "2026-08-09T19:00:00+02:00"
+    },
+    {
+      "match_number": 7,
+      "home_team": "Paris Saint-Germain",
+      "away_team": "Lyon",
+      "competition": "Ligue 1",
+      "kickoff": "2026-08-09T20:00:00+02:00"
+    },
+    {
+      "match_number": 8,
+      "home_team": "Marseille",
+      "away_team": "Monaco",
+      "competition": "Ligue 1",
+      "kickoff": "2026-08-09T20:00:00+02:00"
+    },
+    {
+      "match_number": 9,
+      "home_team": "Ajax",
+      "away_team": "PSV",
+      "competition": "Eredivisie",
+      "kickoff": "2026-08-09T20:00:00+02:00"
+    },
+    {
+      "match_number": 10,
+      "home_team": "Feyenoord",
+      "away_team": "AZ Alkmaar",
+      "competition": "Eredivisie",
+      "kickoff": "2026-08-09T20:00:00+02:00"
+    },
+    {
+      "match_number": 11,
+      "home_team": "Benfica",
+      "away_team": "Porto",
+      "competition": "Primeira Liga",
+      "kickoff": "2026-08-09T21:00:00+02:00"
+    },
+    {
+      "match_number": 12,
+      "home_team": "Celtic",
+      "away_team": "Rangers",
+      "competition": "Scottish Premiership",
+      "kickoff": "2026-08-09T21:00:00+02:00"
+    },
+    {
+      "match_number": 13,
+      "home_team": "Club Brugge",
+      "away_team": "Anderlecht",
+      "competition": "Belgian Pro League",
+      "kickoff": "2026-08-09T21:00:00+02:00"
+    }
+  ]
+}
