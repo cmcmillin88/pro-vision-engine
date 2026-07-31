@@ -1,0 +1,384 @@
+{
+  "components": {
+    "schemas": {
+      "CouponListResponse": {
+        "description": "Response containing available coupon game types.",
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "game_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Game Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "game_types",
+          "count"
+        ],
+        "title": "CouponListResponse",
+        "type": "object"
+      },
+      "CouponMetadataResponse": {
+        "description": "Metadata describing one imported coupon.",
+        "properties": {
+          "deadline": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "expected_match_count": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Match Count"
+          },
+          "game_type": {
+            "title": "Game Type",
+            "type": "string"
+          },
+          "game_type_display": {
+            "title": "Game Type Display",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "imported_at": {
+            "format": "date-time",
+            "title": "Imported At",
+            "type": "string"
+          },
+          "match_count": {
+            "minimum": 0.0,
+            "title": "Match Count",
+            "type": "integer"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "source_display": {
+            "title": "Source Display",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "game_type",
+          "game_type_display",
+          "source",
+          "source_display",
+          "deadline",
+          "imported_at",
+          "match_count"
+        ],
+        "title": "CouponMetadataResponse",
+        "type": "object"
+      },
+      "CouponResponse": {
+        "description": "Complete versioned coupon response.",
+        "properties": {
+          "coupon": {
+            "$ref": "#/components/schemas/CouponMetadataResponse"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/MatchResponse"
+            },
+            "title": "Matches",
+            "type": "array"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "coupon",
+          "matches"
+        ],
+        "title": "CouponResponse",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "description": "Standard API error response.",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "description": "Response returned by the health endpoint.",
+        "properties": {
+          "service": {
+            "title": "Service",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "service",
+          "version"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "MatchResponse": {
+        "description": "API representation of one football match.",
+        "properties": {
+          "away_team": {
+            "title": "Away Team",
+            "type": "string"
+          },
+          "competition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competition"
+          },
+          "home_team": {
+            "title": "Home Team",
+            "type": "string"
+          },
+          "kickoff": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kickoff"
+          },
+          "number": {
+            "minimum": 1.0,
+            "title": "Number",
+            "type": "integer"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "home_team",
+          "away_team",
+          "competition",
+          "kickoff",
+          "status"
+        ],
+        "title": "MatchResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Football pool coupon import, validation and analysis API for Project 13.",
+    "title": "Pro Vision Engine API",
+    "version": "0.1.0-alpha"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/coupons": {
+      "get": {
+        "description": "Return all available demonstration coupon types.",
+        "operationId": "list_coupons_api_v1_coupons_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List available demo coupons",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/api/v1/coupons/{game_type}": {
+      "get": {
+        "description": "Return one imported and validated coupon.",
+        "operationId": "get_coupon_api_v1_coupons__game_type__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "game_type",
+            "required": true,
+            "schema": {
+              "title": "Game Type",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "The requested demonstration coupon does not exist."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get one validated demo coupon",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "description": "Return the current API health status.",
+        "operationId": "get_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Check API health",
+        "tags": [
+          "System"
+        ]
+      }
+    }
+  }
+}
