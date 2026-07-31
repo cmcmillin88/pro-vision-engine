@@ -2,10 +2,16 @@
 
 from pathlib import Path
 
-from src.importer.text_importer import TextImporter
+from src.importer.svenska_spel_importer import (
+    SvenskaSpelImporter,
+)
 from src.models.coupon import Coupon
-from src.models.game_type import GameType
-from src.services.coupon_import_service import CouponImportService
+from src.providers.svenska_spel.json_client import (
+    SvenskaSpelJsonClient,
+)
+from src.services.coupon_import_service import (
+    CouponImportService,
+)
 
 
 VERSION = "0.1.0-alpha"
@@ -28,17 +34,21 @@ def show_project_location() -> None:
 
 
 def load_demo_coupon() -> Coupon:
-    """Import and validate the Topptipset demonstration coupon."""
+    """Import and validate the local Svenska Spel JSON coupon."""
 
-    coupon_file = PROJECT_ROOT / "examples" / "kupong.txt"
+    coupon_file = (
+        PROJECT_ROOT
+        / "examples"
+        / "svenska_spel"
+        / "topptipset.json"
+    )
 
-    importer = TextImporter()
+    client = SvenskaSpelJsonClient()
+    importer = SvenskaSpelImporter(client)
     import_service = CouponImportService(importer)
 
     return import_service.import_coupon(
-        coupon_file,
-        game_type=GameType.TOPPTIPSET,
-        coupon_id="DEMO-TT-001",
+        coupon_file
     )
 
 
@@ -51,7 +61,10 @@ def main() -> None:
     coupon = load_demo_coupon()
 
     print()
-    print("Coupon import and validation: PASSED")
+    print(
+        "Local Svenska Spel JSON import "
+        "and validation: PASSED"
+    )
     print()
     print(coupon)
 

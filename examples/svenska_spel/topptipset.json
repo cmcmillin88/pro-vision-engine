@@ -1,0 +1,63 @@
+{
+  "game_type": "Topptipset",
+  "coupon_id": "DEMO-TT-JSON-001",
+  "deadline": "2026-08-01T15:00:00+02:00",
+  "matches": [
+    {
+      "match_number": 1,
+      "home_team": "Arsenal",
+      "away_team": "Chelsea",
+      "competition": "Premier League",
+      "kickoff": "2026-08-01T16:00:00+02:00"
+    },
+    {
+      "match_number": 2,
+      "home_team": "Liverpool",
+      "away_team": "Everton",
+      "competition": "Premier League",
+      "kickoff": "2026-08-01T16:00:00+02:00"
+    },
+    {
+      "match_number": 3,
+      "home_team": "AIK",
+      "away_team": "Malmö FF",
+      "competition": "Allsvenskan",
+      "kickoff": "2026-08-01T17:30:00+02:00"
+    },
+    {
+      "match_number": 4,
+      "home_team": "Djurgården",
+      "away_team": "Hammarby",
+      "competition": "Allsvenskan",
+      "kickoff": "2026-08-01T17:30:00+02:00"
+    },
+    {
+      "match_number": 5,
+      "home_team": "Braga",
+      "away_team": "Porto",
+      "competition": "Primeira Liga",
+      "kickoff": "2026-08-01T18:00:00+02:00"
+    },
+    {
+      "match_number": 6,
+      "home_team": "Real Madrid",
+      "away_team": "Valencia",
+      "competition": "La Liga",
+      "kickoff": "2026-08-01T19:00:00+02:00"
+    },
+    {
+      "match_number": 7,
+      "home_team": "Inter",
+      "away_team": "Roma",
+      "competition": "Serie A",
+      "kickoff": "2026-08-01T20:00:00+02:00"
+    },
+    {
+      "match_number": 8,
+      "home_team": "Paris Saint-Germain",
+      "away_team": "Marseille",
+      "competition": "Ligue 1",
+      "kickoff": "2026-08-01T21:00:00+02:00"
+    }
+  ]
+}
