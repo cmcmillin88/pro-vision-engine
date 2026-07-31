@@ -5,6 +5,7 @@ from decimal import Decimal, ROUND_HALF_UP
 
 from src.models.team_form import TeamFormSummary
 from src.models.team_match_performance import (
+    MatchVenue,
     TeamMatchPerformance,
     TeamMatchResult,
 )
@@ -21,11 +22,19 @@ class TeamFormAnalyzer:
         performances: Iterable[TeamMatchPerformance],
         *,
         limit: int | None = None,
+        venue: MatchVenue | None = None,
+        competition: str | None = None,
     ) -> TeamFormSummary:
-        """Aggregate recent performances for one team."""
+        """Aggregate filtered recent performances for one team."""
 
         self._validate_limit(
             limit
+        )
+        normalized_competition = (
+            self._validate_filters(
+                venue=venue,
+                competition=competition,
+            )
         )
 
         try:
@@ -78,13 +87,29 @@ class TeamFormAnalyzer:
             )
         )
 
+        filtered_performances = tuple(
+            performance
+            for performance in ordered_performances
+            if self._matches_filters(
+                performance,
+                venue=venue,
+                competition=normalized_competition,
+            )
+        )
+
+        if not filtered_performances:
+            raise ValueError(
+                "No performances match "
+                "the requested filters."
+            )
+
         if limit is None:
             selected_performances = (
-                ordered_performances
+                filtered_performances
             )
         else:
             selected_performances = (
-                ordered_performances[:limit]
+                filtered_performances[:limit]
             )
 
         match_count = len(
@@ -231,6 +256,79 @@ class TeamFormAnalyzer:
             raise ValueError(
                 "limit must be greater than zero."
             )
+
+    @staticmethod
+    def _validate_filters(
+        *,
+        venue: MatchVenue | None,
+        competition: str | None,
+    ) -> str | None:
+        """Validate and normalize optional form filters."""
+
+        if (
+            venue is not None
+            and not isinstance(
+                venue,
+                MatchVenue,
+            )
+        ):
+            raise TypeError(
+                "venue filter must be "
+                "a MatchVenue or None."
+            )
+
+        if competition is None:
+            return None
+
+        if not isinstance(
+            competition,
+            str,
+        ):
+            raise TypeError(
+                "competition filter must be "
+                "a string or None."
+            )
+
+        normalized_competition = " ".join(
+            competition.split()
+        )
+
+        if not normalized_competition:
+            raise ValueError(
+                "competition filter "
+                "must not be empty."
+            )
+
+        return normalized_competition
+
+    @staticmethod
+    def _matches_filters(
+        performance: TeamMatchPerformance,
+        *,
+        venue: MatchVenue | None,
+        competition: str | None,
+    ) -> bool:
+        """Return whether a performance matches all filters."""
+
+        if (
+            venue is not None
+            and performance.venue is not venue
+        ):
+            return False
+
+        if competition is not None:
+            performance_competition = (
+                performance.competition
+                or ""
+            )
+
+            if (
+                performance_competition.casefold()
+                != competition.casefold()
+            ):
+                return False
+
+        return True
 
     @staticmethod
     def _count_results(
