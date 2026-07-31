@@ -1,18 +1,42 @@
 """Tests for the Pro Vision Engine FastAPI application."""
 
+from pathlib import Path
+
+import pytest
 from fastapi.testclient import TestClient
 
 from src.api.app import create_app
 from src.api.settings import ApiSettings
+from src.services.coupon_catalog_protocol import (
+    CouponCatalog,
+)
+from src.services.coupon_source_registry import (
+    CouponSourceRegistry,
+)
+from src.services.demo_coupon_catalog import (
+    DemoCouponCatalog,
+)
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+COUPON_DIRECTORY = (
+    PROJECT_ROOT
+    / "examples"
+    / "svenska_spel"
+)
 
 
 def create_client(
     settings: ApiSettings | None = None,
+    catalog: CouponCatalog | None = None,
+    registry: CouponSourceRegistry | None = None,
 ) -> TestClient:
     """Create a test client for the API."""
 
     application = create_app(
-        settings=settings
+        settings=settings,
+        catalog=catalog,
+        registry=registry,
     )
 
     return TestClient(application)
@@ -173,3 +197,43 @@ def test_disallowed_origin_receives_no_cors_header() -> None:
         "access-control-allow-origin"
         not in response.headers
     )
+
+
+def test_api_accepts_explicit_source_registry() -> None:
+    catalog = DemoCouponCatalog(
+        COUPON_DIRECTORY
+    )
+    registry = CouponSourceRegistry(
+        [catalog]
+    )
+    client = create_client(
+        registry=registry
+    )
+
+    response = client.get(
+        "/api/v1/coupons/topptipset"
+    )
+
+    assert response.status_code == 200
+    assert (
+        response.json()["coupon"]["id"]
+        == "DEMO-TT-JSON-001"
+    )
+
+
+def test_api_rejects_catalog_and_registry_together() -> None:
+    catalog = DemoCouponCatalog(
+        COUPON_DIRECTORY
+    )
+    registry = CouponSourceRegistry(
+        [catalog]
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="either catalog or registry",
+    ):
+        create_app(
+            catalog=catalog,
+            registry=registry,
+        )

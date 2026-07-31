@@ -9,12 +9,15 @@ from src.models.coupon import Coupon
 from src.providers.svenska_spel.json_client import (
     SvenskaSpelJsonClient,
 )
+from src.services.coupon_catalog_protocol import (
+    CouponNotFoundError,
+)
 from src.services.coupon_import_service import (
     CouponImportService,
 )
 
 
-class DemoCouponNotFoundError(ValueError):
+class DemoCouponNotFoundError(CouponNotFoundError):
     """Raised when a requested demonstration coupon does not exist."""
 
 
@@ -42,6 +45,24 @@ class DemoCouponCatalog:
             import_service = CouponImportService(importer)
 
         self._import_service = import_service
+
+    @property
+    def source_name(self) -> str:
+        """Return the machine-readable source name."""
+
+        return "demo"
+
+    @property
+    def source_display_name(self) -> str:
+        """Return the human-readable source name."""
+
+        return "Local demonstration data"
+
+    @property
+    def is_live(self) -> bool:
+        """Return whether the catalog contains live data."""
+
+        return False
 
     @property
     def available_game_types(self) -> tuple[str, ...]:

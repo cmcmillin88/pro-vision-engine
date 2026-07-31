@@ -15,9 +15,15 @@ from src.api.settings import ApiSettings
 from src.exporters.coupon_json_exporter import (
     CouponJsonExporter,
 )
+from src.services.coupon_catalog_protocol import (
+    CouponCatalog,
+    CouponNotFoundError,
+)
+from src.services.coupon_source_registry import (
+    CouponSourceRegistry,
+)
 from src.services.demo_coupon_catalog import (
     DemoCouponCatalog,
-    DemoCouponNotFoundError,
 )
 
 
@@ -30,17 +36,16 @@ DEFAULT_COUPON_DIRECTORY = (
 
 
 def create_app(
-    catalog: DemoCouponCatalog | None = None,
+    catalog: CouponCatalog | None = None,
+    registry: CouponSourceRegistry | None = None,
     exporter: CouponJsonExporter | None = None,
     settings: ApiSettings | None = None,
 ) -> FastAPI:
     """Create and configure the Pro Vision Engine API."""
 
-    resolved_catalog = (
-        catalog
-        or DemoCouponCatalog(
-            DEFAULT_COUPON_DIRECTORY
-        )
+    resolved_registry = _resolve_registry(
+        catalog=catalog,
+        registry=registry,
     )
     resolved_exporter = (
         exporter
@@ -92,7 +97,7 @@ def create_app(
         """Return all available demonstration coupon types."""
 
         game_types = list(
-            resolved_catalog.available_game_types
+            resolved_registry.available_game_types()
         )
 
         return CouponListResponse(
@@ -121,10 +126,10 @@ def create_app(
         """Return one imported and validated coupon."""
 
         try:
-            coupon = resolved_catalog.load(
+            coupon = resolved_registry.load(
                 game_type
             )
-        except DemoCouponNotFoundError as error:
+        except CouponNotFoundError as error:
             raise HTTPException(
                 status_code=404,
                 detail=str(error),
@@ -139,6 +144,40 @@ def create_app(
         )
 
     return application
+
+
+def _resolve_registry(
+    *,
+    catalog: CouponCatalog | None,
+    registry: CouponSourceRegistry | None,
+) -> CouponSourceRegistry:
+    """Resolve the source registry used by the API."""
+
+    if (
+        catalog is not None
+        and registry is not None
+    ):
+        raise ValueError(
+            "Provide either catalog or registry, "
+            "not both."
+        )
+
+    if registry is not None:
+        return registry
+
+    resolved_catalog = (
+        catalog
+        or DemoCouponCatalog(
+            DEFAULT_COUPON_DIRECTORY
+        )
+    )
+
+    return CouponSourceRegistry(
+        [resolved_catalog],
+        default_source_name=(
+            resolved_catalog.source_name
+        ),
+    )
 
 
 app = create_app()
