@@ -4,7 +4,11 @@
  */
 
 import type {
+  CouponAnalysisRunRequest,
+  CouponAnalysisRunResponse,
   CouponListResponse,
+  CouponReductionRunRequest,
+  CouponReductionRunResponse,
   CouponResponse,
   HealthResponse,
 } from "./api-types";
@@ -41,43 +45,84 @@ export class ProVisionApiClient {
   }
 
   getHealth(): Promise<HealthResponse> {
-    return this.get<HealthResponse>("/api/v1/health");
+    return this.request<HealthResponse>(
+      "GET",
+      "/api/v1/health",
+    );
   }
 
   listCoupons(): Promise<CouponListResponse> {
-    return this.get<CouponListResponse>("/api/v1/coupons");
+    return this.request<CouponListResponse>(
+      "GET",
+      "/api/v1/coupons",
+    );
   }
 
   getCoupon(gameType: string): Promise<CouponResponse> {
     const encodedGameType = encodeURIComponent(gameType);
 
-    return this.get<CouponResponse>(
+    return this.request<CouponResponse>(
+      "GET",
       `/api/v1/coupons/${encodedGameType}`,
     );
   }
 
-  private async get<T>(path: string): Promise<T> {
+  createAnalysisRun(
+    request: CouponAnalysisRunRequest,
+  ): Promise<CouponAnalysisRunResponse> {
+    return this.request<CouponAnalysisRunResponse>(
+      "POST",
+      "/api/v1/analysis-runs",
+      request,
+    );
+  }
+
+  createReductionRun(
+    request: CouponReductionRunRequest,
+  ): Promise<CouponReductionRunResponse> {
+    return this.request<CouponReductionRunResponse>(
+      "POST",
+      "/api/v1/reduction-runs",
+      request,
+    );
+  }
+
+  private async request<T>(
+    method: "GET" | "POST",
+    path: string,
+    body?: unknown,
+  ): Promise<T> {
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+    };
+
+    if (body !== undefined) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await this.fetchImplementation(
       `${this.baseUrl}${path}`,
       {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
+        method,
+        headers,
+        body:
+          body === undefined
+            ? undefined
+            : JSON.stringify(body),
       },
     );
 
-    const body = await this.readBody(response);
+    const responseBody = await this.readBody(response);
 
     if (!response.ok) {
       throw new ProVisionApiError(
         `Pro Vision API request failed with status ${response.status}.`,
         response.status,
-        body,
+        responseBody,
       );
     }
 
-    return body as T;
+    return responseBody as T;
   }
 
   private async readBody(

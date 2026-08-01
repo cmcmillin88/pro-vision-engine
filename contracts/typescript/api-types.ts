@@ -4,6 +4,20 @@
  */
 
 /**
+ * Request containing one practical coupon-analysis document.
+ */
+export interface CouponAnalysisRunRequest {
+  analysis_document: Record<string, unknown>;
+}
+
+/**
+ * Versioned practical coupon-analysis result envelope.
+ */
+export interface CouponAnalysisRunResponse {
+  result: Record<string, unknown>;
+}
+
+/**
  * Response containing available coupon game types.
  */
 export interface CouponListResponse {
@@ -24,6 +38,21 @@ export interface CouponMetadataResponse {
   match_count: number;
   source: string;
   source_display: string;
+}
+
+/**
+ * Request containing analysis and reduction configuration data.
+ */
+export interface CouponReductionRunRequest {
+  analysis_document: Record<string, unknown>;
+  reduction_configuration: Record<string, unknown>;
+}
+
+/**
+ * Versioned practical coupon-reduction result envelope.
+ */
+export interface CouponReductionRunResponse {
+  result: Record<string, unknown>;
 }
 
 /**

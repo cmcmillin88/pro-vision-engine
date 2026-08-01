@@ -1,8 +1,9 @@
-"""Response schemas for the Pro Vision Engine API."""
+"""Request and response schemas for the Pro Vision Engine API."""
 
 from datetime import datetime
+from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class HealthResponse(BaseModel):
@@ -54,6 +55,39 @@ class CouponResponse(BaseModel):
     schema_version: str
     coupon: CouponMetadataResponse
     matches: list[MatchResponse]
+
+
+class CouponAnalysisRunRequest(BaseModel):
+    """Request containing one practical coupon-analysis document."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+
+    analysis_document: dict[str, Any]
+
+
+class CouponAnalysisRunResponse(BaseModel):
+    """Versioned practical coupon-analysis result envelope."""
+
+    result: dict[str, Any]
+
+
+class CouponReductionRunRequest(BaseModel):
+    """Request containing analysis and reduction configuration data."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+
+    analysis_document: dict[str, Any]
+    reduction_configuration: dict[str, Any]
+
+
+class CouponReductionRunResponse(BaseModel):
+    """Versioned practical coupon-reduction result envelope."""
+
+    result: dict[str, Any]
 
 
 class ErrorResponse(BaseModel):

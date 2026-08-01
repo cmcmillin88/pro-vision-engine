@@ -16,6 +16,28 @@ def create_openapi_document() -> dict[str, object]:
     return {
         "components": {
             "schemas": {
+                "CouponAnalysisRunRequest": {
+                    "type": "object",
+                    "properties": {
+                        "analysis_document": {
+                            "type": "object",
+                        },
+                    },
+                    "required": [
+                        "analysis_document",
+                    ],
+                },
+                "CouponAnalysisRunResponse": {
+                    "type": "object",
+                    "properties": {
+                        "result": {
+                            "type": "object",
+                        },
+                    },
+                    "required": [
+                        "result",
+                    ],
+                },
                 "CouponMetadataResponse": {
                     "type": "object",
                     "properties": {
@@ -135,6 +157,40 @@ def test_types_include_expected_interfaces() -> None:
     )
 
 
+def test_types_include_practical_run_interfaces() -> None:
+    exporter = TypeScriptContractExporter()
+
+    typescript = exporter.types_to_string(
+        create_openapi_document()
+    )
+
+    assert (
+        "export interface CouponAnalysisRunRequest"
+        in typescript
+    )
+    assert (
+        "export interface CouponAnalysisRunResponse"
+        in typescript
+    )
+
+
+def test_types_map_practical_documents_to_records() -> None:
+    exporter = TypeScriptContractExporter()
+
+    typescript = exporter.types_to_string(
+        create_openapi_document()
+    )
+
+    assert (
+        "analysis_document: Record<string, unknown>;"
+        in typescript
+    )
+    assert (
+        "result: Record<string, unknown>;"
+        in typescript
+    )
+
+
 def test_types_map_nullable_and_optional_fields() -> None:
     exporter = TypeScriptContractExporter()
 
@@ -232,6 +288,59 @@ def test_client_contains_typed_endpoints() -> None:
         "class ProVisionApiError"
         in client
     )
+
+
+def test_client_contains_analysis_run_endpoint() -> None:
+    client = TypeScriptContractExporter.client_to_string()
+
+    assert (
+        "createAnalysisRun("
+        in client
+    )
+    assert (
+        "request: CouponAnalysisRunRequest"
+        in client
+    )
+    assert (
+        "Promise<CouponAnalysisRunResponse>"
+        in client
+    )
+    assert (
+        '"/api/v1/analysis-runs"'
+        in client
+    )
+
+
+def test_client_contains_reduction_run_endpoint() -> None:
+    client = TypeScriptContractExporter.client_to_string()
+
+    assert (
+        "createReductionRun("
+        in client
+    )
+    assert (
+        "request: CouponReductionRunRequest"
+        in client
+    )
+    assert (
+        "Promise<CouponReductionRunResponse>"
+        in client
+    )
+    assert (
+        '"/api/v1/reduction-runs"'
+        in client
+    )
+
+
+def test_client_serializes_post_request_bodies() -> None:
+    client = TypeScriptContractExporter.client_to_string()
+
+    assert (
+        'headers["Content-Type"] = "application/json";'
+        in client
+    )
+    assert "JSON.stringify(body)" in client
+    assert 'method: "GET" | "POST"' in client
 
 
 def test_exporter_writes_complete_contract(

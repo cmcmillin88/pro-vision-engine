@@ -1,6 +1,37 @@
 {
   "components": {
     "schemas": {
+      "CouponAnalysisRunRequest": {
+        "additionalProperties": false,
+        "description": "Request containing one practical coupon-analysis document.",
+        "properties": {
+          "analysis_document": {
+            "additionalProperties": true,
+            "title": "Analysis Document",
+            "type": "object"
+          }
+        },
+        "required": [
+          "analysis_document"
+        ],
+        "title": "CouponAnalysisRunRequest",
+        "type": "object"
+      },
+      "CouponAnalysisRunResponse": {
+        "description": "Versioned practical coupon-analysis result envelope.",
+        "properties": {
+          "result": {
+            "additionalProperties": true,
+            "title": "Result",
+            "type": "object"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "CouponAnalysisRunResponse",
+        "type": "object"
+      },
       "CouponListResponse": {
         "description": "Response containing available coupon game types.",
         "properties": {
@@ -100,6 +131,43 @@
           "match_count"
         ],
         "title": "CouponMetadataResponse",
+        "type": "object"
+      },
+      "CouponReductionRunRequest": {
+        "additionalProperties": false,
+        "description": "Request containing analysis and reduction configuration data.",
+        "properties": {
+          "analysis_document": {
+            "additionalProperties": true,
+            "title": "Analysis Document",
+            "type": "object"
+          },
+          "reduction_configuration": {
+            "additionalProperties": true,
+            "title": "Reduction Configuration",
+            "type": "object"
+          }
+        },
+        "required": [
+          "analysis_document",
+          "reduction_configuration"
+        ],
+        "title": "CouponReductionRunRequest",
+        "type": "object"
+      },
+      "CouponReductionRunResponse": {
+        "description": "Versioned practical coupon-reduction result envelope.",
+        "properties": {
+          "result": {
+            "additionalProperties": true,
+            "title": "Result",
+            "type": "object"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "CouponReductionRunResponse",
         "type": "object"
       },
       "CouponResponse": {
@@ -283,6 +351,48 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/analysis-runs": {
+      "post": {
+        "description": "Run the complete analysis pipeline from JSON data.",
+        "operationId": "create_analysis_run_api_v1_analysis_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponAnalysisRunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponAnalysisRunResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "The supplied analysis document failed strict domain validation."
+          }
+        },
+        "summary": "Run complete coupon analysis",
+        "tags": [
+          "Analysis Runs"
+        ]
+      }
+    },
     "/api/v1/coupons": {
       "get": {
         "description": "Return all available demonstration coupon types.",
@@ -377,6 +487,48 @@
         "summary": "Check API health",
         "tags": [
           "System"
+        ]
+      }
+    },
+    "/api/v1/reduction-runs": {
+      "post": {
+        "description": "Run analysis and reduction from two JSON documents.",
+        "operationId": "create_reduction_run_api_v1_reduction_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponReductionRunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponReductionRunResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "The supplied analysis or reduction document failed strict domain validation."
+          }
+        },
+        "summary": "Run complete coupon analysis and reduction",
+        "tags": [
+          "Reduction Runs"
         ]
       }
     }

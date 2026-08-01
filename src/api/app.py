@@ -6,7 +6,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.schemas import (
+    CouponAnalysisRunRequest,
+    CouponAnalysisRunResponse,
     CouponListResponse,
+    CouponReductionRunRequest,
+    CouponReductionRunResponse,
     CouponResponse,
     ErrorResponse,
     HealthResponse,
@@ -25,6 +29,9 @@ from src.services.coupon_source_registry import (
 from src.services.demo_coupon_catalog import (
     DemoCouponCatalog,
 )
+from src.services.practical_run_api_service import (
+    PracticalRunApiService,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -39,6 +46,7 @@ def create_app(
     catalog: CouponCatalog | None = None,
     registry: CouponSourceRegistry | None = None,
     exporter: CouponJsonExporter | None = None,
+    practical_service: PracticalRunApiService | None = None,
     settings: ApiSettings | None = None,
 ) -> FastAPI:
     """Create and configure the Pro Vision Engine API."""
@@ -51,10 +59,23 @@ def create_app(
         exporter
         or CouponJsonExporter()
     )
+    resolved_practical_service = (
+        practical_service
+        or PracticalRunApiService()
+    )
     resolved_settings = (
         settings
         or ApiSettings()
     )
+
+    if not isinstance(
+        resolved_practical_service,
+        PracticalRunApiService,
+    ):
+        raise TypeError(
+            "practical_service must be a "
+            "PracticalRunApiService or None."
+        )
 
     application = FastAPI(
         title=resolved_settings.title,
@@ -68,7 +89,10 @@ def create_app(
             resolved_settings.allowed_origins
         ),
         allow_credentials=False,
-        allow_methods=["GET"],
+        allow_methods=[
+            "GET",
+            "POST",
+        ],
         allow_headers=["*"],
     )
 
@@ -141,6 +165,81 @@ def create_app(
 
         return CouponResponse.model_validate(
             payload
+        )
+
+    @application.post(
+        "/api/v1/analysis-runs",
+        response_model=CouponAnalysisRunResponse,
+        responses={
+            422: {
+                "model": ErrorResponse,
+                "description": (
+                    "The supplied analysis document "
+                    "failed strict domain validation."
+                ),
+            }
+        },
+        tags=["Analysis Runs"],
+        summary="Run complete coupon analysis",
+    )
+    def create_analysis_run(
+        request: CouponAnalysisRunRequest,
+    ) -> CouponAnalysisRunResponse:
+        """Run the complete analysis pipeline from JSON data."""
+
+        try:
+            result = resolved_practical_service.create_analysis_run(
+                request.analysis_document
+            )
+        except (
+            TypeError,
+            ValueError,
+        ) as error:
+            raise HTTPException(
+                status_code=422,
+                detail=str(error),
+            ) from error
+
+        return CouponAnalysisRunResponse(
+            result=result
+        )
+
+    @application.post(
+        "/api/v1/reduction-runs",
+        response_model=CouponReductionRunResponse,
+        responses={
+            422: {
+                "model": ErrorResponse,
+                "description": (
+                    "The supplied analysis or reduction "
+                    "document failed strict domain validation."
+                ),
+            }
+        },
+        tags=["Reduction Runs"],
+        summary="Run complete coupon analysis and reduction",
+    )
+    def create_reduction_run(
+        request: CouponReductionRunRequest,
+    ) -> CouponReductionRunResponse:
+        """Run analysis and reduction from two JSON documents."""
+
+        try:
+            result = resolved_practical_service.create_reduction_run(
+                request.analysis_document,
+                request.reduction_configuration,
+            )
+        except (
+            TypeError,
+            ValueError,
+        ) as error:
+            raise HTTPException(
+                status_code=422,
+                detail=str(error),
+            ) from error
+
+        return CouponReductionRunResponse(
+            result=result
         )
 
     return application
