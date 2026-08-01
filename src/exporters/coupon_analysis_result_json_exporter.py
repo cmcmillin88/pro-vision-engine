@@ -24,6 +24,7 @@ class CouponAnalysisResultJsonExporter:
         )
 
         report = analysis_run.analysis_report
+        capacity = analysis_run.capacity_assessment
 
         return {
             "schema_version": self.schema_version,
@@ -61,6 +62,26 @@ class CouponAnalysisResultJsonExporter:
                 "row_count": analysis_run.base_system.row_count,
                 "first_row": analysis_run.base_system.first_row.symbols,
                 "last_row": analysis_run.base_system.last_row.symbols,
+            },
+            "capacity": {
+                "level": capacity.level.value,
+                "level_display": capacity.level.display_name,
+                "can_materialize": capacity.can_materialize,
+                "requires_warning": capacity.requires_warning,
+                "expected_row_count": capacity.expected_row_count,
+                "warning_row_count": (
+                    capacity.policy.warning_row_count
+                ),
+                "maximum_materialized_rows": (
+                    capacity.policy.maximum_materialized_rows
+                ),
+                "utilization_percentage": self._decimal_text(
+                    capacity.utilization_percentage
+                ),
+                "row_margin": capacity.row_margin,
+                "single_count": capacity.single_count,
+                "double_count": capacity.double_count,
+                "triple_count": capacity.triple_count,
             },
             "matches": [
                 self._serialize_match(

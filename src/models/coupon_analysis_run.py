@@ -11,6 +11,10 @@ from src.models.final_coupon_analysis import (
     FinalCouponAnalysisReport,
 )
 from src.models.game_type import GameType
+from src.models.reduction_capacity import (
+    ReductionCapacityAssessment,
+    ReductionCapacityLevel,
+)
 from src.models.reduction_frame import (
     BaseReductionSystem,
     ReductionFrame,
@@ -19,13 +23,14 @@ from src.models.reduction_frame import (
 
 @dataclass(frozen=True, slots=True)
 class CouponAnalysisRun:
-    """Links imported input, final analysis and turquoise base system."""
+    """Links input, final analysis, capacity and turquoise system."""
 
     CURRENT_SCHEMA_VERSION: ClassVar[str] = "p13-analysis-result-v1"
 
     input_document: CouponAnalysisDocument
     analysis_report: FinalCouponAnalysisReport
     reduction_frame: ReductionFrame
+    capacity_assessment: ReductionCapacityAssessment
     base_system: BaseReductionSystem
     analyzed_at: datetime
     schema_version: str = CURRENT_SCHEMA_VERSION
@@ -80,6 +85,15 @@ class CouponAnalysisRun:
             )
 
         if not isinstance(
+            self.capacity_assessment,
+            ReductionCapacityAssessment,
+        ):
+            raise TypeError(
+                "capacity_assessment must be a "
+                "ReductionCapacityAssessment."
+            )
+
+        if not isinstance(
             self.base_system,
             BaseReductionSystem,
         ):
@@ -122,6 +136,18 @@ class CouponAnalysisRun:
                 "recommendations exactly."
             )
 
+        if self.capacity_assessment.frame != self.reduction_frame:
+            raise ValueError(
+                "capacity_assessment must belong to "
+                "reduction_frame."
+            )
+
+        if not self.capacity_assessment.can_materialize:
+            raise ValueError(
+                "capacity_assessment must permit materialization "
+                "for a completed analysis run."
+            )
+
         if self.base_system.frame != self.reduction_frame:
             raise ValueError(
                 "base_system must belong to reduction_frame."
@@ -134,6 +160,15 @@ class CouponAnalysisRun:
             raise ValueError(
                 "base_system row count must equal the final "
                 "coupon analysis base-row count."
+            )
+
+        if (
+            self.capacity_assessment.expected_row_count
+            != self.base_system.row_count
+        ):
+            raise ValueError(
+                "capacity_assessment row count must equal "
+                "the materialized base-system row count."
             )
 
     @property
@@ -167,6 +202,12 @@ class CouponAnalysisRun:
         return self.base_system.row_count
 
     @property
+    def capacity_level(self) -> ReductionCapacityLevel:
+        """Return the materialization capacity level."""
+
+        return self.capacity_assessment.level
+
+    @property
     def source_name(self) -> str | None:
         """Return the practical input source when available."""
 
@@ -188,5 +229,6 @@ class CouponAnalysisRun:
             f"Matcher {self.match_count} | "
             f"Ram {self.recommendation_pattern} | "
             f"Rader {self.base_row_count} | "
+            f"Kapacitet {self.capacity_level.display_name} | "
             f"Resultat {self.schema_version}"
         )

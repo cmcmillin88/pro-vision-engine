@@ -33,6 +33,7 @@ class CouponAnalysisConsoleRenderer:
             analysis_run.summary_line,
             analysis_run.analysis_report.summary_line,
             f"Turkos ram: {analysis_run.recommendation_pattern}",
+            analysis_run.capacity_assessment.summary_line,
             "",
         ]
 

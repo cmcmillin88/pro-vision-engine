@@ -20,7 +20,7 @@ from src.services.reduction_row_generator import (
 
 
 class CouponAnalysisFileRunner:
-    """Imports, analyzes and builds the turquoise base system."""
+    """Imports, analyzes, assesses and builds the turquoise system."""
 
     def __init__(
         self,
@@ -74,6 +74,12 @@ class CouponAnalysisFileRunner:
             or ReductionRowGenerator()
         )
 
+    @property
+    def row_generator(self) -> ReductionRowGenerator:
+        """Return the configured capacity-aware row generator."""
+
+        return self._row_generator
+
     def run_file(
         self,
         path: str | Path,
@@ -117,14 +123,17 @@ class CouponAnalysisFileRunner:
         reduction_frame = ReductionFrame.from_coupon_analysis(
             analysis_report
         )
-        base_system = self._row_generator.generate(
-            reduction_frame
+        capacity_assessment, base_system = (
+            self._row_generator.generate_with_assessment(
+                reduction_frame
+            )
         )
 
         return CouponAnalysisRun(
             input_document=document,
             analysis_report=analysis_report,
             reduction_frame=reduction_frame,
+            capacity_assessment=capacity_assessment,
             base_system=base_system,
             analyzed_at=resolved_analyzed_at,
         )
